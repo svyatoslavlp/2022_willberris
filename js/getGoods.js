@@ -1,19 +1,23 @@
 const getGoods = () => {
    const links = document.querySelectorAll('.navigation-link')
 
-   const getData = () => {
+   const getData = (value, category) => {
       fetch('/db/db.json')
          .then((res) => res.json())
          .then((data) => {
-            console.log(data);
-            localStorage.setItem('goods', JSON.stringify(data))
+            const array = category ? data.filter((item) => item[category] === value) : data
+
+            localStorage.setItem('goods', JSON.stringify(array)) // записываем в влокальное хранилище браузера пользователя в формате string
          })
    }
 
    links.forEach((link) => {
       link.addEventListener('click', (event) => {
          event.preventDefault() // удаляем действие браузера на клик ссылки
-         getData()
+         const linkValue = link.textContent
+         const category = link.dataset.field
+
+         getData(linkValue, category)
       })
    })
    /*
